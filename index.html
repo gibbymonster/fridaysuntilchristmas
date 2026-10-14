@@ -131,7 +131,9 @@
     border:1px solid color-mix(in srgb, var(--ink) 25%, transparent);
     padding:10px 20px; border-radius:999px; cursor:pointer; transition:transform .15s, border-color .15s;
   }
-  button:hover{transform:translateY(-2px); border-color:var(--ink)}
+  button:hover,a.btn:hover{transform:translateY(-2px); border-color:var(--ink)}
+  a.btn{font:inherit; font-weight:600; color:var(--ink); text-decoration:none; border:1px solid color-mix(in srgb, var(--gold) 70%, transparent); padding:10px 20px; border-radius:999px; transition:transform .15s, border-color .15s}
+  a.btn:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
   button.primary{background:var(--berry); color:#fff; border-color:var(--berry)}
   button:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
 
@@ -158,6 +160,7 @@
   <div class="controls">
     <button id="copyBtn" class="primary">Copy list</button>
     <button id="refreshBtn">Refresh</button>
+    <a class="btn" href="https://www.noradsanta.org/" target="_blank" rel="noopener noreferrer">🎅 Track Santa</a>
   </div>
 </main>
 
