@@ -10,182 +10,317 @@
 <style>
   :root{
     color-scheme: dark;
-    --bg:#0e2a20; --bg2:#08170f;
-    --ink:#f6f1e7; --muted:#a9c2b3;
-    --berry:#ff5468; --gold:#f5cf74; --flake:#ffffff;
+    --bg:#06122a; --bg2:#0a2a24;
+    --ink:#fff8ea; --muted:#b4cdc0;
+    --berry:#ff3b57; --gold:#ffd86b; --mint:#4fe3a0;
     --display:"Fraunces", Georgia, "Times New Roman", serif;
     --body:"Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]){
-      color-scheme: light;
-      --bg:#f6f1e7; --bg2:#dfeae2; --ink:#12281f; --muted:#51685b;
-      --berry:#c42a40; --gold:#8f6400; --flake:#8fb4cf;
-    }
-  }
-  :root[data-theme="light"]{
-    color-scheme: light;
-    --bg:#f6f1e7; --bg2:#dfeae2; --ink:#12281f; --muted:#51685b;
-    --berry:#c42a40; --gold:#8f6400; --flake:#8fb4cf;
-  }
-  :root[data-theme="dark"]{ color-scheme: dark; }
-
   *{box-sizing:border-box}
   html{scroll-padding-top:env(safe-area-inset-top,0px)}
-  body{
-    margin:0; min-height:100vh; overflow-x:hidden;
-    background:radial-gradient(120% 70% at 50% 0%, var(--bg) 0%, var(--bg2) 100%) fixed;
-    color:var(--ink); font-family:var(--body); line-height:1.5;
+  body{margin:0; min-height:100vh; overflow-x:hidden; background:var(--bg2); color:var(--ink); font-family:var(--body); line-height:1.5}
+
+  /* ===== scenery ===== */
+  .sky{position:fixed; inset:0; background:linear-gradient(180deg,#040c20 0%,var(--bg) 35%,var(--bg2) 100%); z-index:0}
+  .aurora{
+    position:fixed; inset:-15% -10% 35% -10%; z-index:0; mix-blend-mode:screen; filter:blur(34px);
+    background:
+      radial-gradient(40% 60% at 22% 40%, rgba(60,255,170,.38), transparent 70%),
+      radial-gradient(36% 55% at 72% 30%, rgba(130,90,255,.34), transparent 70%),
+      radial-gradient(30% 50% at 50% 62%, rgba(255,80,150,.2), transparent 70%);
+    animation:aur 12s ease-in-out infinite alternate;
   }
+  @keyframes aur{0%{transform:translateX(-5%) skewX(-5deg) scaleY(.9); filter:blur(34px) hue-rotate(0deg)} 100%{transform:translateX(5%) skewX(5deg) scaleY(1.1); filter:blur(34px) hue-rotate(50deg)}}
+  .stars{position:fixed; inset:0; z-index:0; pointer-events:none}
+  .star{position:absolute; border-radius:50%; background:#fff; animation:tw 2.4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.15; transform:scale(.7)} 50%{opacity:1; transform:scale(1.3)}}
+  .shoot{position:fixed; z-index:0; width:130px; height:2px; background:linear-gradient(90deg,transparent,#fff); border-radius:2px; opacity:0; animation:shoot 1.1s ease-out forwards; pointer-events:none}
+  @keyframes shoot{0%{opacity:1; transform:rotate(30deg) translateX(0)} 100%{opacity:0; transform:rotate(30deg) translateX(480px)}}
 
-  /* lights */
-  .lights{position:absolute; top:env(safe-area-inset-top,0px); left:0; width:100%; height:80px; pointer-events:none; z-index:3}
-  .lights svg{display:block; width:100%; height:100%}
-  .wire{fill:none; stroke:#1d1d1d; stroke-width:2}
-  :root[data-theme="light"] .wire{stroke:#3b4a42}
-  .bulb{fill:currentColor; filter:drop-shadow(0 0 6px currentColor); animation:twinkle 1.9s ease-in-out infinite}
-  .socket{fill:#2b2b2b}
-  @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.3}}
+  .hills{position:fixed; left:0; right:0; bottom:34px; height:26vh; min-height:140px; z-index:1; pointer-events:none}
+  .hills svg{width:100%; height:100%; display:block}
 
-  /* snow */
-  .snow{position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden}
-  .flake{position:absolute; top:-12px; background:var(--flake); border-radius:50%; opacity:.8; animation:fall linear infinite}
+  .snow{position:fixed; inset:0; pointer-events:none; z-index:2; overflow:hidden}
+  .flake{position:absolute; top:-14px; color:#fff; animation:fall linear infinite; text-shadow:0 0 6px rgba(255,255,255,.8); will-change:transform}
   @keyframes fall{
-    0%{transform:translate3d(0,-5vh,0)}
-    50%{transform:translate3d(var(--dx),55vh,0)}
-    100%{transform:translate3d(0,108vh,0)}
+    0%{transform:translate3d(0,-6vh,0) rotate(0)}
+    50%{transform:translate3d(var(--dx),55vh,0) rotate(180deg)}
+    100%{transform:translate3d(0,110vh,0) rotate(360deg)}
   }
 
-  main{position:relative; z-index:2; max-width:900px; margin:0 auto; padding:110px 22px 56px}
+  .santa{position:fixed; top:17%; left:0; z-index:5; pointer-events:none; display:flex; align-items:center; animation:fly 26s linear infinite; animation-delay:2s; transform:translateX(-420px)}
+  @keyframes fly{0%{transform:translateX(-420px)} 55%,100%{transform:translateX(calc(100vw + 60px))}}
+  .santa .bob{display:flex; align-items:center; font-size:38px; animation:bob 1.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:scaleX(-1) translateY(-10px) rotate(-3deg)} 50%{transform:scaleX(-1) translateY(12px) rotate(3deg)}}
+  .santa .trail{width:200px; height:4px; margin-right:6px; border-radius:4px; background:linear-gradient(90deg,transparent,var(--gold)); filter:blur(1.5px); animation:trail .5s ease-in-out infinite alternate}
+  @keyframes trail{from{opacity:.4; width:160px} to{opacity:1; width:230px}}
+  .santa .sled{position:relative; margin-left:-6px}
+  .santa .sled i{position:absolute; top:-22px; left:8px; font-size:26px; font-style:normal; transform:scaleX(-1)}
 
-  .hero{margin-bottom:34px}
+  /* ===== lights ===== */
+  .lights{position:absolute; top:env(safe-area-inset-top,0px); left:0; width:100%; height:100px; pointer-events:none; z-index:6}
+  .lights svg{display:block; width:100%; height:100%}
+  .wire{fill:none; stroke:#35453c; stroke-width:2}
+  .socket{fill:#26302b}
+  .bulb{fill:currentColor; filter:drop-shadow(0 0 7px currentColor); animation:chase 1.3s ease-in-out infinite}
+  @keyframes chase{0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.25; transform:scale(.82)}}
+
+  /* ===== layout ===== */
+  main{position:relative; z-index:3; max-width:920px; margin:0 auto; padding:128px 22px 190px}
+  .hero{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:18px 24px; margin-bottom:38px}
+  .copy{flex:1 1 360px; min-width:0}
   .small{color:var(--muted); font-size:17px; margin:0}
   .num{
-    font-family:var(--display); font-weight:900;
-    font-size:clamp(130px,32vw,260px); line-height:.85; letter-spacing:-.04em;
-    margin:8px 0 16px; color:var(--berry);
-    font-variation-settings:"opsz" 144;
-    text-shadow:0 0 28px color-mix(in srgb, var(--berry) 45%, transparent);
-    animation:glow 3s ease-in-out infinite;
+    display:inline-block; cursor:pointer; user-select:none;
+    font-family:var(--display); font-weight:900; font-size:clamp(130px,30vw,250px); line-height:.9; letter-spacing:-.04em;
+    margin:6px 0 12px; font-variation-settings:"opsz" 144;
+    background:repeating-linear-gradient(45deg,#ff3b57 0 .13em,#fff8ea .13em .26em);
+    background-size:.74em .74em; -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 22px rgba(255,59,87,.55));
+    animation:cane 1.6s linear infinite, throb 2.6s ease-in-out infinite;
+    transition:transform .2s;
   }
-  @keyframes glow{
-    0%,100%{text-shadow:0 0 18px color-mix(in srgb, var(--berry) 30%, transparent)}
-    50%{text-shadow:0 0 42px color-mix(in srgb, var(--berry) 65%, transparent)}
-  }
-  h1{font-family:var(--display); font-weight:700; font-size:clamp(26px,5vw,40px); line-height:1.1; margin:0 0 10px}
+  .num:hover{transform:scale(1.06) rotate(-2deg)}
+  @keyframes cane{to{background-position:.74em 0}}
+  @keyframes throb{0%,100%{transform:scale(1)} 50%{transform:scale(1.035)}}
+  h1{font-family:var(--display); font-weight:700; font-size:clamp(28px,5.4vw,44px); line-height:1.1; margin:0 0 10px; color:var(--ink)}
+  h1 .w{display:inline-block; animation:wave 2.2s ease-in-out infinite; animation-delay:var(--wd)}
+  h1 .w:nth-child(3n){color:var(--gold)} h1 .w:nth-child(3n+1){color:#ff8a9a} h1 .w:nth-child(3n+2){color:var(--mint)}
+  @keyframes wave{0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)}}
   .meta{color:var(--muted); margin:0}
   .meta b{color:var(--gold); font-weight:600}
 
+  /* tree */
+  .tree{flex:0 0 auto; width:clamp(140px,26vw,240px); transform-origin:50% 100%; animation:sway 5s ease-in-out infinite alternate; overflow:visible; cursor:pointer; filter:drop-shadow(0 0 24px rgba(79,227,160,.25))}
+  @keyframes sway{from{transform:rotate(-1.6deg)} to{transform:rotate(1.6deg)}}
+  .tree .orn{fill:currentColor; filter:drop-shadow(0 0 4px currentColor); animation:blink 1.5s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1} 50%{opacity:.25}}
+  .tree .topstar{fill:var(--gold); transform-box:fill-box; transform-origin:center; filter:drop-shadow(0 0 10px var(--gold)); animation:starpulse 1.6s ease-in-out infinite}
+  @keyframes starpulse{0%,100%{transform:scale(1) rotate(0)} 50%{transform:scale(1.25) rotate(12deg)}}
+
   /* baubles */
-  .grid{
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr));
-    gap:6px 10px; list-style:none; padding:0; margin:0;
-  }
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:6px 10px; list-style:none; padding:0; margin:0}
   .hang{display:flex; justify-content:center; animation:drop .9s cubic-bezier(.3,1.4,.5,1) both; animation-delay:var(--d)}
-  @keyframes drop{from{transform:translateY(-140px); opacity:0} to{transform:none; opacity:1}}
-  .sw{
-    display:flex; flex-direction:column; align-items:center; transform-origin:50% 0;
-    animation:swing var(--sd) ease-in-out infinite alternate; animation-delay:var(--sl);
-  }
-  @keyframes swing{from{transform:rotate(-4deg)} to{transform:rotate(4deg)}}
+  @keyframes drop{from{transform:translateY(-160px); opacity:0} to{transform:none; opacity:1}}
+  .sw{position:relative; display:flex; flex-direction:column; align-items:center; transform-origin:50% 0; animation:swing var(--sd) ease-in-out infinite alternate; animation-delay:var(--sl)}
+  @keyframes swing{from{transform:rotate(-5deg)} to{transform:rotate(5deg)}}
   .str{width:2px; height:26px; background:var(--muted); opacity:.7}
   .cap{width:22px; height:13px; background:linear-gradient(#ffe9a6,#c99a2e); border-radius:4px 4px 2px 2px; position:relative}
   .cap::before{content:""; position:absolute; left:50%; top:-6px; width:9px; height:9px; margin-left:-4.5px; border:2px solid #c99a2e; border-radius:50%}
   .ball{
+    position:relative; overflow:hidden; cursor:pointer;
     width:98px; height:98px; border-radius:50%; margin-top:-1px;
     display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff;
     background:
       radial-gradient(circle at 30% 24%, rgba(255,255,255,.85) 0 5%, rgba(255,255,255,0) 20%),
       radial-gradient(circle at 36% 30%, var(--c1), var(--c2) 72%);
-    box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25);
+    box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 22px rgba(0,0,0,.35), 0 0 22px -4px var(--c2);
     text-shadow:0 1px 2px rgba(0,0,0,.35);
   }
+  .ball::before{content:""; position:absolute; inset:0; background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.6) 50%,transparent 62%); transform:translateX(-130%); animation:glint 4.5s ease-in-out infinite; animation-delay:var(--gl)}
+  @keyframes glint{0%,60%{transform:translateX(-130%)} 100%{transform:translateX(130%)}}
+  .ball.pop{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes pop{0%{transform:scale(1) rotate(0)} 40%{transform:scale(1.28) rotate(-18deg)} 100%{transform:scale(1) rotate(360deg)}}
   .ball .mo{font-size:13px; opacity:.92; margin-bottom:-2px}
   .ball .d{font-family:var(--display); font-weight:900; font-size:36px; line-height:1}
   .tag{height:20px; margin-top:8px; font-size:12.5px; color:var(--muted); font-weight:600}
-
-  .c0{--c1:#ff7a8a; --c2:#b5162d}
-  .c1{--c1:#fbe08e; --c2:#b8871c}
-  .c2{--c1:#6fd6a1; --c2:#12683f}
-  .c3{--c1:#9fd2ff; --c2:#2a5f9e}
-  .c1 .ball, .ball.gold{color:#3a2800; text-shadow:0 1px 0 rgba(255,255,255,.3)}
-
-  .next .ball{animation:pulse 1.6s ease-in-out infinite}
-  .next .tag{color:var(--berry)}
+  .c0{--c1:#ff7a8a; --c2:#b5162d} .c1{--c1:#fbe08e; --c2:#b8871c} .c2{--c1:#6fd6a1; --c2:#12683f}
+  .c3{--c1:#9fd2ff; --c2:#2a5f9e} .c4{--c1:#d6a8ff; --c2:#6a2fb0}
+  .c1 .ball{color:#3a2800; text-shadow:0 1px 0 rgba(255,255,255,.3)}
+  .next .ball{animation:pulse 1.4s ease-in-out infinite}
+  .next .tag{color:#ff8a9a}
   @keyframes pulse{
-    0%,100%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25), 0 0 0 0 color-mix(in srgb, var(--gold) 0%, transparent)}
-    50%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25), 0 0 34px 8px color-mix(in srgb, var(--gold) 70%, transparent)}
+    0%,100%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.3), 0 0 0 0 rgba(255,216,107,0)}
+    50%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.3), 0 0 44px 12px rgba(255,216,107,.8)}
   }
-  .xmas .ball{--c1:#fff0b0; --c2:#d19a1a; color:#3a2800; width:112px; height:112px; text-shadow:0 1px 0 rgba(255,255,255,.35)}
+  .xmas .ball{--c1:#fff3b8; --c2:#d19a1a; color:#3a2800; width:112px; height:112px; text-shadow:0 1px 0 rgba(255,255,255,.35); animation:pulse 1.4s ease-in-out infinite}
   .xmas .ball .d{font-size:42px}
   .xmas .tag{color:var(--gold)}
-  .xmas .ball::after{content:"★"; position:absolute; margin-top:-128px; color:var(--gold); font-size:22px; animation:twinkle 1.4s ease-in-out infinite}
-  .xmas .sw{position:relative}
+  .xmas .sw::after{content:"★"; position:absolute; top:-6px; left:50%; margin-left:-14px; color:var(--gold); font-size:26px; text-shadow:0 0 12px var(--gold); animation:chase 1.1s ease-in-out infinite}
 
-  .controls{display:flex; gap:10px; margin-top:34px; flex-wrap:wrap}
-  button{
-    font:inherit; font-weight:600; color:var(--ink); background:transparent;
-    border:1px solid color-mix(in srgb, var(--ink) 25%, transparent);
-    padding:10px 20px; border-radius:999px; cursor:pointer; transition:transform .15s, border-color .15s;
+  /* controls */
+  .controls{display:flex; gap:10px; margin-top:36px; flex-wrap:wrap}
+  button,a.btn{font:inherit; font-weight:600; color:var(--ink); background:rgba(255,255,255,.06); text-decoration:none; backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.28); padding:10px 20px; border-radius:999px; cursor:pointer; transition:transform .15s, border-color .15s, background .15s}
+  button:hover,a.btn:hover{transform:translateY(-3px) scale(1.03); border-color:var(--gold); background:rgba(255,216,107,.12)}
+  button.primary{background:var(--berry); border-color:var(--berry); color:#fff}
+  button.primary:hover{background:#ff5d74}
+  button:focus-visible,a.btn:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
+
+  /* foreground */
+  .scene{position:fixed; left:0; right:0; bottom:30px; z-index:3; pointer-events:none; display:flex; justify-content:space-between; padding:0 4vw; font-size:clamp(34px,6vw,56px)}
+  .scene span{display:inline-block; transform-origin:50% 100%; animation:hop 1.8s ease-in-out infinite}
+  .scene .g{animation-name:wob; animation-duration:2.4s}
+  @keyframes hop{0%,100%{transform:translateY(0) scaleY(1)} 45%{transform:translateY(-14px) scaleY(1.05)} 80%{transform:translateY(0) scaleY(.94)}}
+  @keyframes wob{0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)}}
+  .ribbon{position:fixed; left:0; right:0; bottom:0; height:34px; z-index:7; overflow:hidden; background:#b8102a; border-top:4px solid transparent;
+    border-image:repeating-linear-gradient(45deg,#fff 0 8px,#d41233 8px 16px) 4; display:flex; align-items:center; padding-bottom:env(safe-area-inset-bottom,0px)}
+  .track{display:inline-flex; white-space:nowrap; animation:slide 34s linear infinite; font-weight:600; font-size:14px; color:#fff}
+  .track span{padding-right:2.2rem}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* houses on the back hill */
+  .houses{position:fixed; left:0; right:0; bottom:34px; height:26vh; min-height:140px; z-index:1; pointer-events:none}
+  .houses::before{content:""; position:absolute; left:0; right:0; bottom:40%; height:12%; min-height:18px;
+    background:
+      repeating-linear-gradient(90deg,#ffd86b 0 18px,transparent 18px 40px) 0 72% / 100% 2px no-repeat,
+      linear-gradient(#ffffff 0 34%, #b3c5d8 34% 100%);
+    box-shadow:0 -2px 14px rgba(255,255,255,.25)}
+  .house{position:absolute; bottom:47%; width:calc(clamp(46px,7vw,84px) * var(--s,1)); transform:translateX(-50%)}
+  .house svg{display:block; width:100%; height:auto; overflow:visible}
+  .win{fill:#ffd86b; filter:drop-shadow(0 0 5px #ffd86b); animation:win 3.4s ease-in-out infinite}
+  @keyframes win{0%,100%{opacity:1} 45%{opacity:.78} 50%{opacity:1} 70%{opacity:.88}}
+  .sm{fill:#fff; opacity:0; transform-box:fill-box; transform-origin:center; animation:smoke 3.4s ease-out infinite}
+  @keyframes smoke{0%{opacity:.7; transform:translate(0,0) scale(.5)} 100%{opacity:0; transform:translate(9px,-30px) scale(1.5)}}
+  .el{transform-box:fill-box; transform-origin:center; animation:chase 1.4s ease-in-out infinite; filter:drop-shadow(0 0 3px currentColor)}
+
+  /* kids playing on the hills */
+  .play{position:fixed; left:0; right:0; bottom:34px; height:26vh; min-height:140px; z-index:2; pointer-events:none; font-size:clamp(26px,4.4vw,40px)}
+  .kid{position:absolute; bottom:22%; transform-origin:50% 100%; animation:throw 3.2s ease-in-out infinite; animation-delay:var(--kd,0s)}
+  @keyframes throw{0%,24%,100%{transform:rotate(0) translateY(0)} 6%{transform:rotate(-16deg) translateY(-6px)} 14%{transform:rotate(9deg) translateY(0)}}
+  .sb{position:absolute; bottom:calc(22% + 24px); animation:sbx 3.2s linear infinite; animation-delay:var(--sd,0s)}
+  @keyframes sbx{0%{transform:translateX(0)} 40%,100%{transform:translateX(var(--dist))}}
+  .sb i{display:block; width:12px; height:12px; border-radius:50%; background:#fff; box-shadow:0 0 9px #fff; animation:sby 3.2s infinite; animation-delay:var(--sd,0s)}
+  @keyframes sby{
+    0%{transform:translateY(0); opacity:1; animation-timing-function:ease-out}
+    20%{transform:translateY(-62px); opacity:1; animation-timing-function:ease-in}
+    40%{transform:translateY(0) scale(1.6); opacity:1}
+    46%,100%{transform:translateY(0) scale(2.4); opacity:0}
   }
-  button:hover,a.btn:hover{transform:translateY(-2px); border-color:var(--ink)}
-  a.btn{font:inherit; font-weight:600; color:var(--ink); text-decoration:none; border:1px solid color-mix(in srgb, var(--gold) 70%, transparent); padding:10px 20px; border-radius:999px; transition:transform .15s, border-color .15s}
-  a.btn:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
-  button.primary{background:var(--berry); color:#fff; border-color:var(--berry)}
-  button:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
+  .sl{position:absolute; top:34%; animation:slide-down 9s ease-in infinite; animation-delay:var(--sd,0s); opacity:0}
+  .sl .in{position:relative; display:inline-block; animation:bump .5s ease-in-out infinite alternate}
+  .sl.rev .in{transform:scaleX(-1)}
+  .sl .in i{position:absolute; top:-.62em; left:.18em; font-style:normal; font-size:.82em}
+  @keyframes slide-down{
+    0%{transform:translate(0,0) rotate(6deg); opacity:0}
+    8%{opacity:1}
+    88%{opacity:1}
+    100%{transform:translate(var(--sx),38px) rotate(12deg); opacity:0}
+  }
+  @keyframes bump{from{translate:0 0} to{translate:0 -4px}}
+
+  canvas#confetti{position:fixed; inset:0; width:100%; height:100%; z-index:9; pointer-events:none}
+  .sp{position:fixed; z-index:9; pointer-events:none; font-size:16px; animation:spark .9s ease-out forwards}
+  @keyframes spark{0%{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0)} 100%{opacity:0; transform:translate(-50%,calc(-50% + 26px)) scale(.2) rotate(200deg)}}
 
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation:none!important; transition:none!important}
-    .snow{display:none}
+    .snow,.santa,.shoot,.aurora,.sb,.sl{display:none}
+    .num{-webkit-text-fill-color:initial; color:var(--berry); background:none}
   }
 </style>
 </head>
 <body>
+<div class="sky"></div>
+<div class="aurora"></div>
+<div class="stars" id="stars" aria-hidden="true"></div>
+<div class="hills" aria-hidden="true">
+  <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e7f3f6"/><stop offset="1" stop-color="#a9c8d6"/></linearGradient>
+      <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfe3ec"/></linearGradient>
+    </defs>
+    <path d="M0 120 Q150 40 330 100 T660 90 T960 80 T1200 100 V200 H0Z" fill="url(#h1)" opacity=".75"/>
+    <path d="M0 150 Q200 85 420 140 T800 130 T1200 140 V200 H0Z" fill="url(#h2)"/>
+  </svg>
+</div>
+<div class="houses" id="houses" aria-hidden="true"></div>
+<div class="hills" aria-hidden="true">
+  <svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0 150 Q200 85 420 140 T800 130 T1200 140 V200 H0Z" fill="url(#h2)"/></svg>
+</div>
 <div class="snow" id="snow" aria-hidden="true"></div>
+<div class="santa" aria-hidden="true"><span class="trail"></span><span class="bob">🦌🦌🦌<span class="sled">🛷<i>🎅</i></span></span></div>
 <div class="lights" id="lights" aria-hidden="true"></div>
 
 <main>
   <section class="hero">
-    <p class="small" id="today">—</p>
-    <div class="num" id="count" aria-live="polite">–</div>
-    <h1 id="title">Fridays until Christmas</h1>
-    <p class="meta" id="meta"></p>
+    <div class="copy">
+      <p class="small" id="today">—</p>
+      <div class="num" id="count" aria-live="polite" title="Celebrate!">–</div>
+      <h1 id="title">Fridays until Christmas</h1>
+      <p class="meta" id="meta"></p>
+    </div>
+
+    <svg class="tree" id="tree" viewBox="0 0 200 250" aria-hidden="true">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2fbf71"/><stop offset="1" stop-color="#0e6a3e"/></linearGradient>
+      </defs>
+      <rect x="88" y="206" width="24" height="34" rx="3" fill="#7a4a22"/>
+      <polygon points="100,26 152,102 48,102" fill="url(#g1)"/>
+      <polygon points="100,66 168,152 32,152" fill="url(#g1)"/>
+      <polygon points="100,108 184,206 16,206" fill="url(#g1)"/>
+      <path d="M62 92 Q100 110 138 92" stroke="#ffd86b" stroke-width="3" fill="none" stroke-dasharray="1 6" stroke-linecap="round"/>
+      <path d="M48 142 Q100 166 152 142" stroke="#ffd86b" stroke-width="3" fill="none" stroke-dasharray="1 6" stroke-linecap="round"/>
+      <path d="M32 196 Q100 226 168 196" stroke="#ffd86b" stroke-width="3" fill="none" stroke-dasharray="1 6" stroke-linecap="round"/>
+      <path class="topstar" d="M100 2 L106 17 L122 18 L110 28 L114 44 L100 35 L86 44 L90 28 L78 18 L94 17 Z"/>
+      <circle class="orn" cx="92" cy="74" r="5" style="color:#ff3b57;animation-delay:0s"/>
+      <circle class="orn" cx="116" cy="88" r="5" style="color:#ffd86b;animation-delay:.3s"/>
+      <circle class="orn" cx="76" cy="112" r="6" style="color:#5db8ff;animation-delay:.6s"/>
+      <circle class="orn" cx="124" cy="126" r="6" style="color:#ff3b57;animation-delay:.9s"/>
+      <circle class="orn" cx="100" cy="140" r="5" style="color:#d6a8ff;animation-delay:.2s"/>
+      <circle class="orn" cx="58" cy="156" r="6" style="color:#ffd86b;animation-delay:.5s"/>
+      <circle class="orn" cx="142" cy="162" r="6" style="color:#5db8ff;animation-delay:.8s"/>
+      <circle class="orn" cx="92" cy="176" r="6" style="color:#ff3b57;animation-delay:1.1s"/>
+      <circle class="orn" cx="44" cy="190" r="6" style="color:#d6a8ff;animation-delay:.4s"/>
+      <circle class="orn" cx="124" cy="196" r="6" style="color:#ffd86b;animation-delay:.7s"/>
+      <circle class="orn" cx="160" cy="194" r="5" style="color:#ff3b57;animation-delay:1s"/>
+      <circle class="orn" cx="72" cy="200" r="5" style="color:#5db8ff;animation-delay:.1s"/>
+    </svg>
   </section>
 
   <ul class="grid" id="grid" aria-label="Fridays until Christmas"></ul>
 
   <div class="controls">
-    <button id="copyBtn" class="primary">Copy list</button>
+    <button id="celebrateBtn" class="primary">🎉 Celebrate</button>
+    <button id="copyBtn">Copy list</button>
     <button id="refreshBtn">Refresh</button>
     <a class="btn" href="https://www.noradsanta.org/" target="_blank" rel="noopener noreferrer">🎅 Track Santa</a>
   </div>
 </main>
 
+<div class="scene" aria-hidden="true"><span>⛄</span><span><span class="g">🎁</span><span style="animation-delay:.2s">🎄</span></span></div>
+
+<div class="play" aria-hidden="true">
+  <!-- snowball fight, left -->
+  <span class="kid" style="left:13%">👦</span>
+  <span class="kid" style="left:29%; --kd:1.6s">👧</span>
+  <div class="sb" style="left:14.5%; --dist:15vw"><i></i></div>
+  <div class="sb" style="left:29.5%; --dist:-15vw; --sd:1.6s"><i></i></div>
+
+  <!-- snowball fight, right -->
+  <span class="kid" style="left:66%; --kd:.8s">🧒</span>
+  <span class="kid" style="left:82%; --kd:2.4s">👧</span>
+  <div class="sb" style="left:67.5%; --dist:15vw; --sd:.8s"><i></i></div>
+  <div class="sb" style="left:82.5%; --dist:-15vw; --sd:2.4s"><i></i></div>
+
+</div>
+<div class="ribbon" aria-hidden="true"><div class="track" id="track"></div></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
 <script>
 (function(){
   const $ = id => document.getElementById(id);
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PAL = ['#ff3b57','#ffd86b','#4fe3a0','#5db8ff','#d6a8ff','#ff9d4d','#ffffff'];
 
-  /* ---------- date logic ---------- */
+  /* ---------- dates ---------- */
   function compute(){
     const n = new Date();
     const today = new Date(n.getFullYear(), n.getMonth(), n.getDate());
     let xmas = new Date(today.getFullYear(), 11, 25);
     if (xmas < today) xmas = new Date(today.getFullYear() + 1, 11, 25);
     const fridays = [];
-    for (let d = new Date(today); d <= xmas; d.setDate(d.getDate() + 1)) {
-      if (d.getDay() === 5) fridays.push(new Date(d));
-    }
+    for (let d = new Date(today); d <= xmas; d.setDate(d.getDate() + 1)) if (d.getDay() === 5) fridays.push(new Date(d));
     return { today, xmas, fridays, days: Math.round((xmas - today) / 864e5) };
   }
   const same = (a,b) => a.getTime() === b.getTime();
 
   function countUp(el, to){
     if (reduce || to === 0) { el.textContent = to; return; }
-    const t0 = performance.now(), dur = 1100;
+    const t0 = performance.now(), dur = 1200;
     (function step(t){
       const p = Math.min((t - t0) / dur, 1);
       el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
@@ -193,26 +328,32 @@
     })(t0);
   }
 
+  function waveTitle(text){
+    const h = $('title');
+    h.setAttribute('aria-label', text);
+    h.innerHTML = text.split(' ').map((w,i) => `<span class="w" aria-hidden="true" style="--wd:${(i*0.18).toFixed(2)}s">${w}</span>`).join(' ');
+  }
+
   function render(){
     const { today, xmas, fridays, days } = compute();
     $('today').textContent = today.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
     countUp($('count'), fridays.length);
-    $('title').textContent = fridays.length === 1 ? 'Friday until Christmas' : 'Fridays until Christmas';
+    waveTitle(fridays.length === 1 ? 'Friday until Christmas' : 'Fridays until Christmas');
     $('meta').innerHTML = days === 0
-      ? '<b>Merry Christmas!</b>'
-      : `<b>${days}</b> day${days===1?'':'s'} to go` + (xmas.getDay() === 5 ? ' · Christmas lands on a Friday' : '');
+      ? '<b>Merry Christmas!</b> 🎄'
+      : `<b>${days}</b> day${days===1?'':'s'} to go` + (xmas.getDay() === 5 ? ' · Christmas lands on a Friday 🎁' : '');
 
-    const grid = $('grid');
-    grid.innerHTML = '';
+    const grid = $('grid'); grid.innerHTML = '';
     fridays.forEach((d,i) => {
       const li = document.createElement('li');
-      li.className = 'hang c' + (i % 4);
+      li.className = 'hang c' + (i % 5);
       let tag = '&nbsp;';
       if (same(d, xmas)) { li.classList.add('xmas'); tag = 'Christmas Day'; }
       else if (i === 0) { li.classList.add('next'); tag = same(d, today) ? 'Today' : 'Next up'; }
-      li.style.setProperty('--d', (0.25 + i * 0.09) + 's');
-      li.style.setProperty('--sd', (2.4 + (i % 5) * 0.45) + 's');
+      li.style.setProperty('--d',  (0.3 + i * 0.1) + 's');
+      li.style.setProperty('--sd', (2.2 + (i % 5) * 0.45) + 's');
       li.style.setProperty('--sl', (-(i * 0.7)) + 's');
+      li.style.setProperty('--gl', ((i * 0.55) % 4.5) + 's');
       li.innerHTML =
         `<div class="sw"><span class="str"></span><span class="cap"></span>` +
         `<div class="ball"><span class="mo">${d.toLocaleDateString(undefined,{month:'short'})}</span><span class="d">${d.getDate()}</span></div>` +
@@ -222,58 +363,152 @@
     if (!fridays.length) grid.innerHTML = '<li class="tag">No Fridays left</li>';
   }
 
-  /* ---------- string lights ---------- */
-  const COLORS = ['#ff4d63','#ffd25e','#4fe3a0','#5db8ff','#ff9d4d'];
+  /* ---------- string lights (two strands) ---------- */
   function lights(){
-    const w = Math.max(window.innerWidth, 320), h = 80, seg = Math.max(160, w / 5);
-    const pts = [];
-    for (let x = 0; x <= w; x += 6) {
-      const f = ((x % seg) / seg);
-      pts.push([x, 6 + 26 * Math.sin(Math.PI * f)]);
-    }
-    let s = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
-    s += `<polyline class="wire" points="${pts.map(p=>p.join(',')).join(' ')}"/>`;
-    let i = 0;
-    for (let x = 18; x < w; x += 34) {
-      const f = ((x % seg) / seg), y = 6 + 26 * Math.sin(Math.PI * f);
-      const c = COLORS[i % COLORS.length];
-      s += `<rect class="socket" x="${x-3}" y="${y}" width="6" height="7" rx="1.5"/>`;
-      s += `<ellipse class="bulb" cx="${x}" cy="${y+14}" rx="5" ry="7" style="color:${c};animation-delay:${((i%5)*0.38).toFixed(2)}s"/>`;
-      i++;
-    }
-    $('lights').innerHTML = s + '</svg>';
+    const w = Math.max(window.innerWidth, 320), h = 100;
+    const strand = (base, sag, seg, gap, off, phase) => {
+      let pts = [], s = '';
+      const yAt = x => base + sag * Math.sin(Math.PI * ((x % seg) / seg));
+      for (let x = 0; x <= w; x += 6) pts.push(x + ',' + yAt(x).toFixed(1));
+      s += `<polyline class="wire" points="${pts.join(' ')}"/>`;
+      let i = 0;
+      for (let x = off; x < w; x += gap) {
+        const y = yAt(x), c = PAL[(i + phase) % 6];
+        s += `<rect class="socket" x="${x-3}" y="${y.toFixed(1)}" width="6" height="7" rx="1.5"/>`;
+        s += `<ellipse class="bulb" cx="${x}" cy="${(y+14).toFixed(1)}" rx="5" ry="7" style="color:${c};animation-delay:${(i*0.13).toFixed(2)}s;transform-box:fill-box;transform-origin:center"/>`;
+        i++;
+      }
+      return s;
+    };
+    const seg = Math.max(170, w / 5);
+    $('lights').innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">` +
+      strand(5, 22, seg, 34, 18, 0) + strand(40, 18, seg * 0.72, 40, 30, 3) + '</svg>';
   }
 
-  /* ---------- snow ---------- */
+  /* ---------- stars, snow, shooting stars ---------- */
+  function stars(){
+    const box = $('stars'); let s = '';
+    const n = window.innerWidth < 600 ? 50 : 100;
+    for (let i = 0; i < n; i++) {
+      const z = 1 + Math.random() * 2.2;
+      s += `<i class="star" style="left:${Math.random()*100}%;top:${Math.random()*70}%;width:${z}px;height:${z}px;animation-delay:${(Math.random()*4).toFixed(2)}s;animation-duration:${(1.6+Math.random()*2.4).toFixed(2)}s"></i>`;
+    }
+    box.innerHTML = s;
+  }
   function snow(){
     if (reduce) return;
     const box = $('snow'); box.innerHTML = '';
-    const n = window.innerWidth < 600 ? 28 : 55;
+    const n = window.innerWidth < 600 ? 34 : 70, glyphs = ['❄','❅','❆','•','•','•'];
     for (let i = 0; i < n; i++) {
       const f = document.createElement('i');
-      f.className = 'flake';
-      const sz = 2 + Math.random() * 4;
-      f.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;` +
-        `animation-duration:${9 + Math.random()*12}s;animation-delay:${-Math.random()*20}s;` +
-        `--dx:${(Math.random()*80-40).toFixed(0)}px;opacity:${(0.4+Math.random()*0.5).toFixed(2)}`;
+      f.className = 'flake'; f.textContent = glyphs[i % glyphs.length]; f.style.fontStyle = 'normal';
+      f.style.cssText += `left:${Math.random()*100}%;font-size:${(8+Math.random()*16).toFixed(0)}px;` +
+        `animation-duration:${(9+Math.random()*13).toFixed(1)}s;animation-delay:${(-Math.random()*22).toFixed(1)}s;` +
+        `--dx:${(Math.random()*90-45).toFixed(0)}px;opacity:${(0.45+Math.random()*0.55).toFixed(2)}`;
       box.appendChild(f);
     }
   }
+  function shooter(){
+    if (reduce) return;
+    setInterval(() => {
+      const s = document.createElement('i'); s.className = 'shoot';
+      s.style.left = (Math.random()*60) + '%'; s.style.top = (Math.random()*30) + '%';
+      document.body.appendChild(s); setTimeout(() => s.remove(), 1300);
+    }, 3800);
+  }
 
+  /* ---------- confetti ---------- */
+  const cv = $('confetti'), ctx = cv.getContext('2d'); let parts = [], running = false;
+  function fit(){ cv.width = window.innerWidth; cv.height = window.innerHeight; }
+  function burst(x, y, n){
+    if (reduce) return;
+    n = n || 70;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 9;
+      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 5, w: 5 + Math.random() * 7, h: 3 + Math.random() * 5,
+        r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: PAL[(Math.random() * PAL.length) | 0], life: 0});
+    }
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+  function tick(){
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    parts = parts.filter(p => p.life < 220 && p.y < cv.height + 30);
+    for (const p of parts) {
+      p.vy += .24; p.vx *= .992; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+      ctx.globalAlpha = Math.max(0, 1 - p.life / 220); ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
+    }
+    if (parts.length) requestAnimationFrame(tick); else { running = false; ctx.clearRect(0, 0, cv.width, cv.height); }
+  }
+  function celebrate(){
+    const W = window.innerWidth;
+    [0.2, 0.5, 0.8].forEach((f, i) => setTimeout(() => burst(W * f, window.innerHeight * 0.38, 90), i * 220));
+  }
+  const center = el => { const r = el.getBoundingClientRect(); return [r.left + r.width/2, r.top + r.height/2]; };
+
+  /* ---------- interactions ---------- */
+  $('grid').addEventListener('click', e => {
+    const b = e.target.closest('.ball'); if (!b) return;
+    const [x, y] = center(b); burst(x, y, 55);
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    setTimeout(() => b.classList.remove('pop'), 750);
+  });
+  $('count').addEventListener('click', () => celebrate());
+  $('celebrateBtn').addEventListener('click', celebrate);
+  $('tree').addEventListener('click', () => { const [x, y] = center($('tree')); burst(x, y - 60, 90); });
   $('refreshBtn').addEventListener('click', render);
   $('copyBtn').addEventListener('click', async () => {
     const { today, xmas, fridays } = compute();
-    const text = `Today: ${today.toDateString()}\nChristmas: ${xmas.toDateString()}\nFridays until Christmas: ${fridays.length}\n\n` +
-      fridays.map(d => d.toDateString()).join('\n');
+    const text = `Today: ${today.toDateString()}\nChristmas: ${xmas.toDateString()}\nFridays until Christmas: ${fridays.length}\n\n` + fridays.map(d => d.toDateString()).join('\n');
     const b = $('copyBtn');
-    try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
-    catch(e){ b.textContent = 'Copy failed'; }
+    try { await navigator.clipboard.writeText(text); b.textContent = 'Copied ✓'; } catch(e){ b.textContent = 'Copy failed'; }
     setTimeout(() => b.textContent = 'Copy list', 1800);
   });
 
-  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(lights, 150); });
+  // cursor sparkle trail
+  let last = 0, si = 0;
+  window.addEventListener('pointermove', e => {
+    if (reduce) return;
+    const t = performance.now(); if (t - last < 45) return; last = t;
+    const s = document.createElement('span'); s.className = 'sp'; s.textContent = '✦';
+    s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px'; s.style.color = PAL[si++ % PAL.length];
+    document.body.appendChild(s); setTimeout(() => s.remove(), 950);
+  });
 
-  render(); lights(); snow();
+  // houses
+  function houses(){
+    const cfg = [
+      {l:6,  c:'#c8553d', s:1.0}, {l:19, c:'#3a6ea5', s:.8}, {l:34, c:'#d9a441', s:.7},
+      {l:52, c:'#6b8e4e', s:.75}, {l:67, c:'#b5838d', s:.9}, {l:83, c:'#c8553d', s:.8}, {l:95, c:'#3a6ea5', s:.9}
+    ];
+    const lc = ['#ff3b57','#ffd86b','#4fe3a0','#5db8ff'];
+    $('houses').innerHTML = cfg.map((h, k) => {
+      let lamps = '';
+      for (let i = 0; i < 7; i++) lamps += `<circle class="el" cx="${6 + i*11}" cy="${37 - (i < 4 ? 0 : 0)}" r="2" fill="currentColor" style="color:${lc[(i+k)%4]};animation-delay:${(i*0.2).toFixed(1)}s"/>`;
+      return `<div class="house" style="left:${h.l}%;--s:${h.s}"><svg viewBox="0 0 80 74" xmlns="http://www.w3.org/2000/svg">
+        <circle class="sm" cx="57" cy="12" r="4" style="animation-delay:0s"/><circle class="sm" cx="57" cy="12" r="4" style="animation-delay:1.1s"/><circle class="sm" cx="57" cy="12" r="4" style="animation-delay:2.2s"/>
+        <rect x="52" y="14" width="10" height="20" fill="#7a4a3a"/><rect x="50.5" y="12" width="13" height="4" rx="1" fill="#fff"/>
+        <rect x="10" y="34" width="60" height="34" fill="${h.c}"/>
+        <polygon points="3,37 40,7 77,37" fill="#463847"/>
+        <path d="M10 31 L40 9 L70 31 Q62 27 55 31 Q47 25 40 29 Q33 25 25 31 Q17 27 10 31Z" fill="#fff"/>
+        ${lamps}
+        <rect class="win" x="17" y="46" width="13" height="12" rx="1.5" style="animation-delay:${(k*0.5).toFixed(1)}s"/>
+        <rect class="win" x="51" y="46" width="13" height="12" rx="1.5" style="animation-delay:${(k*0.5+1.2).toFixed(1)}s"/>
+        <rect x="34" y="50" width="12" height="18" rx="1.5" fill="#3b2a22"/>
+        <circle cx="40" cy="57" r="3.4" fill="none" stroke="#2fbf71" stroke-width="1.6"/><circle cx="40" cy="60.4" r="1.2" fill="#ff3b57"/>
+      </svg></div>`;
+    }).join('');
+  }
+
+  // marquee
+  const msg = '🎄 Merry Christmas &nbsp;❄&nbsp; Happy Holidays &nbsp;🎁&nbsp; Ho ho ho! &nbsp;🔔&nbsp; Joy to the world &nbsp;⭐&nbsp; Jingle all the way &nbsp;🍪&nbsp; Cookies for Santa &nbsp;';
+  const unit = `<span>${msg}</span>`.repeat(3);
+  $('track').innerHTML = unit + unit;
+
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { lights(); fit(); }, 150); });
+
+  fit(); render(); lights(); stars(); houses(); snow(); shooter();
+  setTimeout(() => burst(window.innerWidth * 0.5, window.innerHeight * 0.3, 80), 1300);
 })();
 </script>
 </body>
