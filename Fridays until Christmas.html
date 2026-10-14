@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Fridays until Christmas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Figtree:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0e2a20; --bg2:#08170f;
+    --ink:#f6f1e7; --muted:#a9c2b3;
+    --berry:#ff5468; --gold:#f5cf74; --flake:#ffffff;
+    --display:"Fraunces", Georgia, "Times New Roman", serif;
+    --body:"Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      color-scheme: light;
+      --bg:#f6f1e7; --bg2:#dfeae2; --ink:#12281f; --muted:#51685b;
+      --berry:#c42a40; --gold:#8f6400; --flake:#8fb4cf;
+    }
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --bg:#f6f1e7; --bg2:#dfeae2; --ink:#12281f; --muted:#51685b;
+    --berry:#c42a40; --gold:#8f6400; --flake:#8fb4cf;
+  }
+  :root[data-theme="dark"]{ color-scheme: dark; }
+
+  *{box-sizing:border-box}
+  html{scroll-padding-top:env(safe-area-inset-top,0px)}
+  body{
+    margin:0; min-height:100vh; overflow-x:hidden;
+    background:radial-gradient(120% 70% at 50% 0%, var(--bg) 0%, var(--bg2) 100%) fixed;
+    color:var(--ink); font-family:var(--body); line-height:1.5;
+  }
+
+  /* lights */
+  .lights{position:absolute; top:env(safe-area-inset-top,0px); left:0; width:100%; height:80px; pointer-events:none; z-index:3}
+  .lights svg{display:block; width:100%; height:100%}
+  .wire{fill:none; stroke:#1d1d1d; stroke-width:2}
+  :root[data-theme="light"] .wire{stroke:#3b4a42}
+  .bulb{fill:currentColor; filter:drop-shadow(0 0 6px currentColor); animation:twinkle 1.9s ease-in-out infinite}
+  .socket{fill:#2b2b2b}
+  @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* snow */
+  .snow{position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden}
+  .flake{position:absolute; top:-12px; background:var(--flake); border-radius:50%; opacity:.8; animation:fall linear infinite}
+  @keyframes fall{
+    0%{transform:translate3d(0,-5vh,0)}
+    50%{transform:translate3d(var(--dx),55vh,0)}
+    100%{transform:translate3d(0,108vh,0)}
+  }
+
+  main{position:relative; z-index:2; max-width:900px; margin:0 auto; padding:110px 22px 56px}
+
+  .hero{margin-bottom:34px}
+  .small{color:var(--muted); font-size:17px; margin:0}
+  .num{
+    font-family:var(--display); font-weight:900;
+    font-size:clamp(130px,32vw,260px); line-height:.85; letter-spacing:-.04em;
+    margin:8px 0 16px; color:var(--berry);
+    font-variation-settings:"opsz" 144;
+    text-shadow:0 0 28px color-mix(in srgb, var(--berry) 45%, transparent);
+    animation:glow 3s ease-in-out infinite;
+  }
+  @keyframes glow{
+    0%,100%{text-shadow:0 0 18px color-mix(in srgb, var(--berry) 30%, transparent)}
+    50%{text-shadow:0 0 42px color-mix(in srgb, var(--berry) 65%, transparent)}
+  }
+  h1{font-family:var(--display); font-weight:700; font-size:clamp(26px,5vw,40px); line-height:1.1; margin:0 0 10px}
+  .meta{color:var(--muted); margin:0}
+  .meta b{color:var(--gold); font-weight:600}
+
+  /* baubles */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr));
+    gap:6px 10px; list-style:none; padding:0; margin:0;
+  }
+  .hang{display:flex; justify-content:center; animation:drop .9s cubic-bezier(.3,1.4,.5,1) both; animation-delay:var(--d)}
+  @keyframes drop{from{transform:translateY(-140px); opacity:0} to{transform:none; opacity:1}}
+  .sw{
+    display:flex; flex-direction:column; align-items:center; transform-origin:50% 0;
+    animation:swing var(--sd) ease-in-out infinite alternate; animation-delay:var(--sl);
+  }
+  @keyframes swing{from{transform:rotate(-4deg)} to{transform:rotate(4deg)}}
+  .str{width:2px; height:26px; background:var(--muted); opacity:.7}
+  .cap{width:22px; height:13px; background:linear-gradient(#ffe9a6,#c99a2e); border-radius:4px 4px 2px 2px; position:relative}
+  .cap::before{content:""; position:absolute; left:50%; top:-6px; width:9px; height:9px; margin-left:-4.5px; border:2px solid #c99a2e; border-radius:50%}
+  .ball{
+    width:98px; height:98px; border-radius:50%; margin-top:-1px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff;
+    background:
+      radial-gradient(circle at 30% 24%, rgba(255,255,255,.85) 0 5%, rgba(255,255,255,0) 20%),
+      radial-gradient(circle at 36% 30%, var(--c1), var(--c2) 72%);
+    box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25);
+    text-shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+  .ball .mo{font-size:13px; opacity:.92; margin-bottom:-2px}
+  .ball .d{font-family:var(--display); font-weight:900; font-size:36px; line-height:1}
+  .tag{height:20px; margin-top:8px; font-size:12.5px; color:var(--muted); font-weight:600}
+
+  .c0{--c1:#ff7a8a; --c2:#b5162d}
+  .c1{--c1:#fbe08e; --c2:#b8871c}
+  .c2{--c1:#6fd6a1; --c2:#12683f}
+  .c3{--c1:#9fd2ff; --c2:#2a5f9e}
+  .c1 .ball, .ball.gold{color:#3a2800; text-shadow:0 1px 0 rgba(255,255,255,.3)}
+
+  .next .ball{animation:pulse 1.6s ease-in-out infinite}
+  .next .tag{color:var(--berry)}
+  @keyframes pulse{
+    0%,100%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25), 0 0 0 0 color-mix(in srgb, var(--gold) 0%, transparent)}
+    50%{box-shadow:inset -9px -12px 20px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.25), 0 0 34px 8px color-mix(in srgb, var(--gold) 70%, transparent)}
+  }
+  .xmas .ball{--c1:#fff0b0; --c2:#d19a1a; color:#3a2800; width:112px; height:112px; text-shadow:0 1px 0 rgba(255,255,255,.35)}
+  .xmas .ball .d{font-size:42px}
+  .xmas .tag{color:var(--gold)}
+  .xmas .ball::after{content:"★"; position:absolute; margin-top:-128px; color:var(--gold); font-size:22px; animation:twinkle 1.4s ease-in-out infinite}
+  .xmas .sw{position:relative}
+
+  .controls{display:flex; gap:10px; margin-top:34px; flex-wrap:wrap}
+  button{
+    font:inherit; font-weight:600; color:var(--ink); background:transparent;
+    border:1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+    padding:10px 20px; border-radius:999px; cursor:pointer; transition:transform .15s, border-color .15s;
+  }
+  button:hover{transform:translateY(-2px); border-color:var(--ink)}
+  button.primary{background:var(--berry); color:#fff; border-color:var(--berry)}
+  button:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important; transition:none!important}
+    .snow{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="snow" id="snow" aria-hidden="true"></div>
+<div class="lights" id="lights" aria-hidden="true"></div>
+
+<main>
+  <section class="hero">
+    <p class="small" id="today">—</p>
+    <div class="num" id="count" aria-live="polite">–</div>
+    <h1 id="title">Fridays until Christmas</h1>
+    <p class="meta" id="meta"></p>
+  </section>
+
+  <ul class="grid" id="grid" aria-label="Fridays until Christmas"></ul>
+
+  <div class="controls">
+    <button id="copyBtn" class="primary">Copy list</button>
+    <button id="refreshBtn">Refresh</button>
+  </div>
+</main>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- date logic ---------- */
+  function compute(){
+    const n = new Date();
+    const today = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    let xmas = new Date(today.getFullYear(), 11, 25);
+    if (xmas < today) xmas = new Date(today.getFullYear() + 1, 11, 25);
+    const fridays = [];
+    for (let d = new Date(today); d <= xmas; d.setDate(d.getDate() + 1)) {
+      if (d.getDay() === 5) fridays.push(new Date(d));
+    }
+    return { today, xmas, fridays, days: Math.round((xmas - today) / 864e5) };
+  }
+  const same = (a,b) => a.getTime() === b.getTime();
+
+  function countUp(el, to){
+    if (reduce || to === 0) { el.textContent = to; return; }
+    const t0 = performance.now(), dur = 1100;
+    (function step(t){
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function render(){
+    const { today, xmas, fridays, days } = compute();
+    $('today').textContent = today.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    countUp($('count'), fridays.length);
+    $('title').textContent = fridays.length === 1 ? 'Friday until Christmas' : 'Fridays until Christmas';
+    $('meta').innerHTML = days === 0
+      ? '<b>Merry Christmas!</b>'
+      : `<b>${days}</b> day${days===1?'':'s'} to go` + (xmas.getDay() === 5 ? ' · Christmas lands on a Friday' : '');
+
+    const grid = $('grid');
+    grid.innerHTML = '';
+    fridays.forEach((d,i) => {
+      const li = document.createElement('li');
+      li.className = 'hang c' + (i % 4);
+      let tag = '&nbsp;';
+      if (same(d, xmas)) { li.classList.add('xmas'); tag = 'Christmas Day'; }
+      else if (i === 0) { li.classList.add('next'); tag = same(d, today) ? 'Today' : 'Next up'; }
+      li.style.setProperty('--d', (0.25 + i * 0.09) + 's');
+      li.style.setProperty('--sd', (2.4 + (i % 5) * 0.45) + 's');
+      li.style.setProperty('--sl', (-(i * 0.7)) + 's');
+      li.innerHTML =
+        `<div class="sw"><span class="str"></span><span class="cap"></span>` +
+        `<div class="ball"><span class="mo">${d.toLocaleDateString(undefined,{month:'short'})}</span><span class="d">${d.getDate()}</span></div>` +
+        `<span class="tag">${tag}</span></div>`;
+      grid.appendChild(li);
+    });
+    if (!fridays.length) grid.innerHTML = '<li class="tag">No Fridays left</li>';
+  }
+
+  /* ---------- string lights ---------- */
+  const COLORS = ['#ff4d63','#ffd25e','#4fe3a0','#5db8ff','#ff9d4d'];
+  function lights(){
+    const w = Math.max(window.innerWidth, 320), h = 80, seg = Math.max(160, w / 5);
+    const pts = [];
+    for (let x = 0; x <= w; x += 6) {
+      const f = ((x % seg) / seg);
+      pts.push([x, 6 + 26 * Math.sin(Math.PI * f)]);
+    }
+    let s = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
+    s += `<polyline class="wire" points="${pts.map(p=>p.join(',')).join(' ')}"/>`;
+    let i = 0;
+    for (let x = 18; x < w; x += 34) {
+      const f = ((x % seg) / seg), y = 6 + 26 * Math.sin(Math.PI * f);
+      const c = COLORS[i % COLORS.length];
+      s += `<rect class="socket" x="${x-3}" y="${y}" width="6" height="7" rx="1.5"/>`;
+      s += `<ellipse class="bulb" cx="${x}" cy="${y+14}" rx="5" ry="7" style="color:${c};animation-delay:${((i%5)*0.38).toFixed(2)}s"/>`;
+      i++;
+    }
+    $('lights').innerHTML = s + '</svg>';
+  }
+
+  /* ---------- snow ---------- */
+  function snow(){
+    if (reduce) return;
+    const box = $('snow'); box.innerHTML = '';
+    const n = window.innerWidth < 600 ? 28 : 55;
+    for (let i = 0; i < n; i++) {
+      const f = document.createElement('i');
+      f.className = 'flake';
+      const sz = 2 + Math.random() * 4;
+      f.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;` +
+        `animation-duration:${9 + Math.random()*12}s;animation-delay:${-Math.random()*20}s;` +
+        `--dx:${(Math.random()*80-40).toFixed(0)}px;opacity:${(0.4+Math.random()*0.5).toFixed(2)}`;
+      box.appendChild(f);
+    }
+  }
+
+  $('refreshBtn').addEventListener('click', render);
+  $('copyBtn').addEventListener('click', async () => {
+    const { today, xmas, fridays } = compute();
+    const text = `Today: ${today.toDateString()}\nChristmas: ${xmas.toDateString()}\nFridays until Christmas: ${fridays.length}\n\n` +
+      fridays.map(d => d.toDateString()).join('\n');
+    const b = $('copyBtn');
+    try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
+    catch(e){ b.textContent = 'Copy failed'; }
+    setTimeout(() => b.textContent = 'Copy list', 1800);
+  });
+
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(lights, 150); });
+
+  render(); lights(); snow();
+})();
+</script>
+</body>
+</html>
